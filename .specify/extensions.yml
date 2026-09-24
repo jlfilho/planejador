@@ -1,0 +1,18 @@
+installed: []
+settings:
+  auto_execute_hooks: true
+hooks:
+  after_constitution:
+    - command: constitution-commit
+      enabled: true
+      optional: false
+      priority: 10
+      description: "Commit only the approved project constitution on main."
+      prompt: "Commit the project constitution."
+  before_implement:
+    - command: feature-branch-prepare
+      enabled: true
+      optional: false
+      priority: 10
+      description: "Create the branch for the single active Spec Kit feature."
+      prompt: "Prepare the active feature branch."
