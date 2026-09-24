@@ -1,50 +1,66 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Planejador BNCC Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Security by Default
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+Every input MUST be validated. Authentication MUST use secure mechanisms; the
+backend MUST enforce RBAC and ownership for every private resource independently
+of the interface. Secrets, credentials, integration keys, and private keys MUST
+never be exposed, committed, or returned to the browser. Integration secrets MUST
+remain in the backend or an approved secret store.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### II. Specification-Driven Delivery
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+Every functional change MUST begin in one numbered specification and follow the
+Specify, Clarify, Plan, Checklist, Tasks, Analyze, Implement, and Converge flow.
+Each feature MUST have exactly one specification, one `feat/<numero>-<nome>`
+branch, and one pull request. The feature branch MUST be created automatically
+immediately before Implement.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### III. Authoritative Data and Contractual API
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+PostgreSQL accessed through Prisma is the authoritative persistent store, and all
+schema changes MUST use versioned migrations. The BNCC catalog is global and
+read-only to teachers. The API MUST be RESTful and documented in OpenAPI/Swagger;
+the frontend MUST NOT access the database, n8n, Gemini, or Qdrant directly.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### IV. Responsible AI with Human Authorship
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+Every AI-produced result MUST begin as an editable draft. Human authorship and
+control MUST be preserved, and the system MUST NOT automatically finalize an AI
+result. AI integrations MUST be called only through approved backend boundaries.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### V. Verifiable Quality
+
+Relevant unit, integration, and critical end-to-end tests MUST be maintained.
+Linting, type checking, and production builds MUST pass before a pull request is
+opened. A failing quality gate blocks publication until it is resolved.
+
+## Architecture and Data Boundaries
+
+Private data belongs to its owner. The backend MUST verify ownership for every
+read, write, update, deletion, or operation affecting private data. Client-side
+visibility, route guards, and UI restrictions are convenience controls only and
+MUST NOT replace backend authorization. External integration access is mediated
+by backend services that validate requests, protect secrets, and return only the
+data appropriate for the authenticated user.
+
+## Delivery Workflow and Quality Gates
+
+Work proceeds in small, reviewable increments. Implementation MUST use the active
+numbered specification and its generated plan and tasks. Before publication, the
+feature workflow MUST inspect the proposed changes, reject unexpected or sensitive
+files, run available quality gates, and create a PR targeting `main`. Merge
+approval remains a human decision.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes conflicting project practices. Any amendment MUST be
+documented in `.specify/memory/constitution.md`, include a Sync Impact Report,
+and follow semantic versioning: MAJOR for incompatible governance changes, MINOR
+for new or materially expanded principles, and PATCH for clarifications. Pull
+request reviews MUST verify compliance with these principles, especially security,
+ownership, API boundaries, AI reviewability, and quality gates.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-09-23 | **Last Amended**: 2026-09-23
