@@ -1,66 +1,71 @@
-# Planejador BNCC Constitution
+# Constituição do Planejador BNCC
 
-## Core Principles
+## Princípios Fundamentais
 
-### I. Security by Default
+### I. Segurança por Padrão
 
-Every input MUST be validated. Authentication MUST use secure mechanisms; the
-backend MUST enforce RBAC and ownership for every private resource independently
-of the interface. Secrets, credentials, integration keys, and private keys MUST
-never be exposed, committed, or returned to the browser. Integration secrets MUST
-remain in the backend or an approved secret store.
+Toda entrada DEVE ser validada. A autenticação DEVE usar mecanismos seguros; o
+backend DEVE aplicar RBAC e verificar propriedade para todo recurso privado,
+independentemente da interface. Segredos, credenciais, chaves de integração e
+chaves privadas NUNCA DEVEM ser expostos, versionados ou devolvidos ao navegador.
+Os segredos de integração DEVEM permanecer no backend ou em um cofre aprovado.
 
-### II. Specification-Driven Delivery
+### II. Entrega Orientada por Especificação
 
-Every functional change MUST begin in one numbered specification and follow the
-Specify, Clarify, Plan, Checklist, Tasks, Analyze, Implement, and Converge flow.
-Each feature MUST have exactly one specification, one `feat/<numero>-<nome>`
-branch, and one pull request. The feature branch MUST be created automatically
-immediately before Implement.
+Toda alteração funcional DEVE começar em uma specification numerada e seguir o
+fluxo Specify, Clarify, Plan, Checklist, Tasks, Analyze, Implement e Converge.
+Cada feature DEVE ter exatamente uma specification, uma branch
+`feat/<numero>-<nome>` e um pull request. A branch da feature DEVE ser criada
+automaticamente imediatamente antes de Implement.
 
-### III. Authoritative Data and Contractual API
+### III. Dados Autoritativos e API Contratual
 
-PostgreSQL accessed through Prisma is the authoritative persistent store, and all
-schema changes MUST use versioned migrations. The BNCC catalog is global and
-read-only to teachers. The API MUST be RESTful and documented in OpenAPI/Swagger;
-the frontend MUST NOT access the database, n8n, Gemini, or Qdrant directly.
+O PostgreSQL acessado por meio do Prisma é o repositório persistente autoritativo,
+e toda alteração de esquema DEVE usar migrations versionadas. O catálogo da BNCC é
+global e somente leitura para professores. A API DEVE ser RESTful e documentada em
+OpenAPI/Swagger; o frontend NÃO DEVE acessar diretamente o banco de dados, n8n,
+Gemini ou Qdrant.
 
-### IV. Responsible AI with Human Authorship
+### IV. IA Responsável com Autoria Humana
 
-Every AI-produced result MUST begin as an editable draft. Human authorship and
-control MUST be preserved, and the system MUST NOT automatically finalize an AI
-result. AI integrations MUST be called only through approved backend boundaries.
+Todo resultado produzido por IA DEVE começar como rascunho editável. A autoria e o
+controle humanos DEVEM ser preservados, e o sistema NÃO DEVE finalizar
+automaticamente um resultado de IA. Integrações de IA DEVEM ser chamadas apenas
+por meio de limites aprovados do backend.
 
-### V. Verifiable Quality
+### V. Qualidade Verificável
 
-Relevant unit, integration, and critical end-to-end tests MUST be maintained.
-Linting, type checking, and production builds MUST pass before a pull request is
-opened. A failing quality gate blocks publication until it is resolved.
+Testes unitários, de integração e de ponta a ponta críticos DEVEM ser mantidos.
+Lint, verificação de tipos e builds de produção DEVEM passar antes da abertura de
+um pull request. Uma barreira de qualidade reprovada bloqueia a publicação até sua
+resolução.
 
-## Architecture and Data Boundaries
+## Limites de Arquitetura e Dados
 
-Private data belongs to its owner. The backend MUST verify ownership for every
-read, write, update, deletion, or operation affecting private data. Client-side
-visibility, route guards, and UI restrictions are convenience controls only and
-MUST NOT replace backend authorization. External integration access is mediated
-by backend services that validate requests, protect secrets, and return only the
-data appropriate for the authenticated user.
+Dados privados pertencem ao seu usuário proprietário. O backend DEVE verificar a
+propriedade em toda leitura, escrita, atualização, exclusão ou operação que afete
+dados privados. Visibilidade no cliente, guardas de rota e restrições da UI são
+apenas controles de conveniência e NÃO DEVEM substituir a autorização no backend.
+O acesso a integrações externas é mediado por serviços de backend que validam
+requisições, protegem segredos e retornam somente os dados apropriados ao usuário
+autenticado.
 
-## Delivery Workflow and Quality Gates
+## Fluxo de Entrega e Barreiras de Qualidade
 
-Work proceeds in small, reviewable increments. Implementation MUST use the active
-numbered specification and its generated plan and tasks. Before publication, the
-feature workflow MUST inspect the proposed changes, reject unexpected or sensitive
-files, run available quality gates, and create a PR targeting `main`. Merge
-approval remains a human decision.
+O trabalho avança em incrementos pequenos e revisáveis. A implementação DEVE usar
+a specification numerada ativa e seu plano e tarefas gerados. Antes da publicação,
+o fluxo da feature DEVE inspecionar as alterações propostas, rejeitar arquivos
+inesperados ou sensíveis, executar as barreiras de qualidade disponíveis e criar
+um PR direcionado a `main`. A aprovação do merge permanece uma decisão humana.
 
-## Governance
+## Governança
 
-This constitution supersedes conflicting project practices. Any amendment MUST be
-documented in `.specify/memory/constitution.md`, include a Sync Impact Report,
-and follow semantic versioning: MAJOR for incompatible governance changes, MINOR
-for new or materially expanded principles, and PATCH for clarifications. Pull
-request reviews MUST verify compliance with these principles, especially security,
-ownership, API boundaries, AI reviewability, and quality gates.
+Esta constituição prevalece sobre práticas conflitantes do projeto. Toda emenda
+DEVE ser documentada em `.specify/memory/constitution.md`, incluir um Relatório de
+Impacto de Sincronização e seguir versionamento semântico: MAJOR para alterações
+de governança incompatíveis, MINOR para princípios novos ou materialmente
+ampliados e PATCH para esclarecimentos. As revisões de pull request DEVEM verificar
+a conformidade com estes princípios, especialmente segurança, propriedade, limites
+da API, revisabilidade da IA e barreiras de qualidade.
 
-**Version**: 1.0.0 | **Ratified**: 2026-09-23 | **Last Amended**: 2026-09-23
+**Versão**: 1.0.1 | **Ratificada em**: 2026-09-23 | **Última alteração**: 2026-09-23
