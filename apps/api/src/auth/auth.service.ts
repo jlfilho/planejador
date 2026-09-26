@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
 import { randomUUID } from 'crypto';
@@ -26,7 +26,12 @@ export function parseRefreshToken(token: string): { sessionId: string; secret: s
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly users: UsersService, private readonly prisma: PrismaService, private readonly jwt: JwtService, private readonly audit: AuditService) {}
+  constructor(
+    @Inject(UsersService) private readonly users: UsersService,
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(JwtService) private readonly jwt: JwtService,
+    @Inject(AuditService) private readonly audit: AuditService,
+  ) {}
 
   async access(user: { id: string; email: string; role: string }, sessionId: string) {
     return this.jwt.signAsync({ sub: user.id, email: user.email, role: user.role, sid: sessionId }, { secret: accessTokenSecret(), expiresIn: (process.env.JWT_ACCESS_TTL || '15m') as never });

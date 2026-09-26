@@ -4,6 +4,7 @@
   "packageManager": "pnpm@10.17.0",
   "scripts": {
     "dev": "turbo dev",
+    "dev:up": "powershell -ExecutionPolicy Bypass -File .\\scripts\\start-dev.ps1",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "test": "turbo test",

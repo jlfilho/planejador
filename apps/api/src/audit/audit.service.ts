@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { AuditResult, Prisma } from '@prisma/client';
 import { PrismaService } from '../common/prisma.service';
 
 @Injectable()
 export class AuditService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
 
   async log(type: string, result: AuditResult, userId?: string, sessionId?: string, context?: Record<string, unknown>) {
     return this.logWith(this.prisma, type, result, userId, sessionId, context);
