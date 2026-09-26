@@ -25,17 +25,21 @@ preserving every uncommitted change.
 4. Derive the destination branch by replacing the candidate's `specs/` prefix
    with `feat/`; for example, `specs/001-foundation-auth` becomes
    `feat/001-foundation-auth`.
-5. Run `git branch --show-current` and require exactly `main`. If it differs or
-   is empty, stop without altering the working tree.
-6. Verify the destination branch does not exist locally with
+5. Run `git branch --show-current`.
+   - If it is exactly `<destination>`, this is a safe resumption: do not run
+     `git pull` or `git switch`; run `git status`, confirm the selected Spec Kit
+     artifacts remain present, and finish successfully.
+   - Otherwise require exactly `main`. If it differs or is empty, stop without
+     altering the working tree.
+6. Only from `main`, verify the destination branch does not exist locally with
    `git show-ref --verify --quiet refs/heads/<destination>`. Verify it does not
    exist on `origin` with `git ls-remote --heads origin refs/heads/<destination>`.
    Stop if either exists. If the remote check itself fails, stop and request
    human resolution rather than treating the failure as absence.
-7. Preserve all uncommitted changes. Never stash, commit, reset, clean, or
+7. Only from `main`, preserve all uncommitted changes. Never stash, commit, reset, clean, or
    discard them. Run exactly `git pull --ff-only`; if it fails, stop for human
    resolution.
-8. Run exactly `git switch -c <destination>`, then confirm with
+8. Only from `main`, run exactly `git switch -c <destination>`, then confirm with
    `git branch --show-current` that the result is exactly `<destination>`.
    Stop and report any failure.
 9. Run exactly `git status`. Reinspect porcelain status and confirm that the

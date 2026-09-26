@@ -1,0 +1,6 @@
+CREATE TYPE "Role" AS ENUM ('ADMIN', 'PROFESSOR');
+CREATE TYPE "AuditResult" AS ENUM ('SUCCESS', 'FAILURE');
+CREATE TABLE "User" ("id" TEXT PRIMARY KEY, "email" TEXT NOT NULL UNIQUE, "passwordHash" TEXT NOT NULL, "role" "Role" NOT NULL DEFAULT 'PROFESSOR', "isActive" BOOLEAN NOT NULL DEFAULT true, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP(3) NOT NULL);
+CREATE TABLE "Session" ("id" TEXT PRIMARY KEY, "userId" TEXT NOT NULL, "refreshTokenHash" TEXT NOT NULL, "familyId" TEXT NOT NULL, "expiresAt" TIMESTAMP(3) NOT NULL, "revokedAt" TIMESTAMP(3), "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE);
+CREATE TABLE "AuditEvent" ("id" TEXT PRIMARY KEY, "type" TEXT NOT NULL, "result" "AuditResult" NOT NULL, "userId" TEXT, "sessionId" TEXT, "context" JSONB, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT "AuditEvent_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL);
+CREATE INDEX "Session_userId_idx" ON "Session"("userId"); CREATE INDEX "Session_familyId_idx" ON "Session"("familyId"); CREATE INDEX "AuditEvent_userId_idx" ON "AuditEvent"("userId");
