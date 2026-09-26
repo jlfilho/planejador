@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+enum Role {
+  ADMIN
+  PROFESSOR
+}
+enum AuditResult {
+  SUCCESS
+  FAILURE
+}
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  passwordHash String
+  role Role @default(PROFESSOR)
+  isActive Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sessions Session[]
+  audits AuditEvent[]
+}
+model Session {
+  id String @id @default(uuid())
+  userId String
+  refreshTokenHash String
+  familyId String
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+  @@index([familyId])
+}
+model AuditEvent {
+  id String @id @default(uuid())
+  type String
+  result AuditResult
+  userId String?
+  sessionId String?
+  context Json?
+  createdAt DateTime @default(now())
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  @@index([userId])
+}

@@ -1,0 +1,17 @@
+{
+  "name": "planejador-bncc",
+  "private": true,
+  "packageManager": "pnpm@10.17.0",
+  "scripts": {
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "test:integration": "turbo test:integration",
+    "test:e2e": "turbo test:e2e",
+    "build": "turbo build"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.6"
+  }
+}
