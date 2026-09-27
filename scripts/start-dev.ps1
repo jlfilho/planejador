@@ -21,7 +21,8 @@ Invoke-Step 'Starting PostgreSQL container' { docker compose up -d }
 Invoke-Step 'Installing dependencies' { pnpm install }
 Invoke-Step 'Generating Prisma client' { pnpm --filter @planejador/api prisma:generate }
 Invoke-Step 'Applying Prisma migrations' { pnpm --filter @planejador/api prisma:migrate }
-Invoke-Step 'Bootstrapping the initial ADMIN account' { pnpm --filter @planejador/api admin:bootstrap }
+# Execute manually only when no ADMIN exists yet:
+# pnpm --filter @planejador/api admin:bootstrap
 
 Write-Host "`n==> Starting development servers (press Ctrl+C to stop)" -ForegroundColor Cyan
 pnpm dev

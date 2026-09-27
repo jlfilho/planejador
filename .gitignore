@@ -8,6 +8,8 @@
 
 # Dependencies
 node_modules/
+.pnpm-store/
+*.tsbuildinfo
 
 # Build, coverage, and caches
 dist/
