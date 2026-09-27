@@ -1,0 +1,3 @@
+-- O catálogo é carregado de forma idempotente por `prisma/seed.ts`.
+-- Esta migration foi reservada para carga, mas não deve remover índices de
+-- busca criados pela migration estrutural anterior.

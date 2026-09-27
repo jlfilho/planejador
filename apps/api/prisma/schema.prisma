@@ -13,6 +13,11 @@ enum AuditResult {
   SUCCESS
   FAILURE
 }
+enum EixoBNCC {
+  PENSAMENTO_COMPUTACIONAL
+  MUNDO_DIGITAL
+  CULTURA_DIGITAL
+}
 model User {
   id String @id @default(uuid())
   email String @unique
@@ -46,4 +51,51 @@ model AuditEvent {
   createdAt DateTime @default(now())
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
   @@index([userId])
+}
+model NivelEnsino {
+  id String @id @default(uuid())
+  codigo String @unique
+  nome String @unique
+  ativo Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  etapas EtapaEnsino[]
+}
+model EtapaEnsino {
+  id String @id @default(uuid())
+  nivelEnsinoId String
+  codigo String
+  nome String
+  anoInicial Int?
+  anoFinal Int?
+  ativo Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  nivel NivelEnsino @relation(fields:[nivelEnsinoId], references:[id], onDelete: Restrict)
+  habilidades HabilidadeBNCC[]
+  @@unique([nivelEnsinoId,codigo])
+  @@unique([nivelEnsinoId,nome])
+  @@index([nivelEnsinoId,ativo])
+}
+model HabilidadeBNCC {
+  id String @id @default(uuid())
+  etapaEnsinoId String
+  codigo String @unique
+  eixo EixoBNCC?
+  descricao String
+  explicacao String
+  ativa Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  etapa EtapaEnsino @relation(fields:[etapaEnsinoId], references:[id], onDelete: Restrict)
+  exemplos ExemploHabilidadeBNCC[]
+  @@index([etapaEnsinoId,ativa,eixo,codigo])
+}
+model ExemploHabilidadeBNCC {
+  id String @id @default(uuid())
+  habilidadeBNCCId String
+  ordem Int
+  texto String
+  habilidade HabilidadeBNCC @relation(fields:[habilidadeBNCCId], references:[id], onDelete: Cascade)
+  @@unique([habilidadeBNCCId,ordem])
 }
