@@ -18,6 +18,15 @@ enum EixoBNCC {
   MUNDO_DIGITAL
   CULTURA_DIGITAL
 }
+enum PlanStatus {
+  RASCUNHO
+  FINALIZADO
+}
+enum AiRunStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+}
 model User {
   id String @id @default(uuid())
   email String @unique
@@ -28,6 +37,8 @@ model User {
   updatedAt DateTime @updatedAt
   sessions Session[]
   audits AuditEvent[]
+  aiRuns AiRun[]
+  plans Plan[]
 }
 model Session {
   id String @id @default(uuid())
@@ -89,6 +100,7 @@ model HabilidadeBNCC {
   updatedAt DateTime @updatedAt
   etapa EtapaEnsino @relation(fields:[etapaEnsinoId], references:[id], onDelete: Restrict)
   exemplos ExemploHabilidadeBNCC[]
+  aiRunSkills AiRunSkill[]
   @@index([etapaEnsinoId,ativa,eixo,codigo])
 }
 model ExemploHabilidadeBNCC {
@@ -98,4 +110,59 @@ model ExemploHabilidadeBNCC {
   texto String
   habilidade HabilidadeBNCC @relation(fields:[habilidadeBNCCId], references:[id], onDelete: Cascade)
   @@unique([habilidadeBNCCId,ordem])
+}
+model AiRun {
+  id String @id @default(uuid())
+  requesterId String
+  requestId String @unique
+  idempotencyKey String @unique
+  status AiRunStatus @default(PENDING)
+  instruction String
+  durationMinutes Int
+  usesDigitalResources Boolean
+  attemptCount Int @default(1)
+  failureCode String?
+  createdAt DateTime @default(now())
+  completedAt DateTime?
+  requester User @relation(fields: [requesterId], references: [id], onDelete: Restrict)
+  skills AiRunSkill[]
+  plan Plan?
+  @@index([requesterId, createdAt])
+  @@index([status, createdAt])
+}
+model AiRunSkill {
+  id String @id @default(uuid())
+  aiRunId String
+  habilidadeBNCCId String
+  ordem Int
+  aiRun AiRun @relation(fields: [aiRunId], references: [id], onDelete: Cascade)
+  habilidade HabilidadeBNCC @relation(fields: [habilidadeBNCCId], references: [id], onDelete: Restrict)
+  @@unique([aiRunId, habilidadeBNCCId])
+  @@unique([aiRunId, ordem])
+}
+model Plan {
+  id String @id @default(uuid())
+  ownerId String
+  aiRunId String @unique
+  status PlanStatus @default(RASCUNHO)
+  markdown String
+  aiAssisted Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  finalizedAt DateTime?
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  aiRun AiRun @relation(fields: [aiRunId], references: [id], onDelete: Restrict)
+  references PlanReference[]
+  @@index([ownerId, status, updatedAt])
+  @@index([status, updatedAt])
+}
+model PlanReference {
+  id String @id @default(uuid())
+  planId String
+  title String
+  url String?
+  citation String?
+  ordem Int
+  plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  @@unique([planId, ordem])
 }

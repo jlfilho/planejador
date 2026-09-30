@@ -1,5 +1,7 @@
 import { InternalServerErrorException } from '@nestjs/common';
 
+const N8N_WEBHOOK_ENDPOINT = 'https://jlfilho.app.n8n.cloud/webhook/agente-planejador-bncc';
+
 export function accessTokenSecret(): string {
   const value = process.env.JWT_ACCESS_SECRET;
   if (!value || value.length < 32) {
@@ -35,3 +37,35 @@ export function assertSameSiteRefreshTopology(): void {
 }
 
 export function isProduction(): boolean { return process.env.NODE_ENV === 'production'; }
+
+export function n8nWebhookUrl(): string {
+  const value = process.env.N8N_WEBHOOK_URL;
+  if (value !== N8N_WEBHOOK_ENDPOINT) {
+    throw new InternalServerErrorException('Secure n8n integration configuration is required');
+  }
+  return value;
+}
+
+export function n8nIntegrationSecret(): string {
+  const value = process.env.N8N_INTEGRATION_SECRET;
+  if (!value || value.length < 32) {
+    throw new InternalServerErrorException('Secure n8n integration configuration is required');
+  }
+  return value;
+}
+
+export function n8nAuthHeaderName(): string {
+  const value = process.env.N8N_AUTH_HEADER_NAME;
+  if (!value || !/^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/.test(value)) {
+    throw new InternalServerErrorException('Secure n8n integration configuration is required');
+  }
+  return value;
+}
+
+export function n8nTimeoutMs(): number {
+  const value = Number(process.env.N8N_TIMEOUT_MS ?? 15000);
+  if (!Number.isInteger(value) || value < 1 || value > 30000) {
+    throw new InternalServerErrorException('Secure n8n integration configuration is required');
+  }
+  return value;
+}

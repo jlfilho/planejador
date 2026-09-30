@@ -8,7 +8,8 @@
 
 ## Qualidade do Conteúdo
 
-- [x] Sem detalhes de implementação, bibliotecas, URLs, segredos ou protocolos.
+- [x] Sem detalhes de implementação, bibliotecas, segredos ou protocolos; links
+  Figma limitam-se à referência visual de aceitação.
 - [x] Focada no valor para o professor e nas regras de negócio.
 - [x] Redigida para partes interessadas não técnicas.
 - [x] Todas as seções obrigatórias estão preenchidas.
@@ -31,3 +32,5 @@
 ## Notas
 
 - Decisões sobre conexão, autenticação do serviço externo, persistência e bibliotecas foram propositalmente adiadas para o Plan.
+- Os nove protótipos Figma são referência visual vinculante dos estados da
+  interface, sem alterar escopo de autorização, propriedade ou integrações.
