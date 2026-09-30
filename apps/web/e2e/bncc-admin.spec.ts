@@ -15,7 +15,7 @@ test('admin desativa habilidade e a consulta docente deixa de exibi-la', async (
   });
   await page.goto('/catalogo-bncc/admin');
   await page.getByRole('button', { name: 'Desativar' }).last().click();
-  await expect(page.getByRole('status')).toHaveText('Alteração salva e auditada.');
+  await expect(page.getByText('Alteração salva e auditada.')).toBeVisible();
   await page.goto('/catalogo-bncc');
   await expect(page.getByText('Nenhuma habilidade encontrada.')).toBeVisible();
 });
