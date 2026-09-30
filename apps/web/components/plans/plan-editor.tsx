@@ -1,0 +1,16 @@
+'use client';
+import { useEffect, useState } from 'react';
+import { Plan, PlanReference, plansApi } from '../../lib/plans-api';
+import { useSession } from '../auth/auth-session-provider';
+import { Button, Notice, Panel } from '../ui/ui';
+
+const parseReferences = (value: string): PlanReference[] => value.split('\n').map((line) => line.trim()).filter(Boolean).map((line) => { const [title, url, citation] = line.split('|').map((part) => part.trim()); return { title, ...(url ? { url } : {}), ...(citation ? { citation } : {}) }; });
+const formatReferences = (references: PlanReference[]) => references.map((reference) => [reference.title, reference.url ?? '', reference.citation ?? ''].join(' | ')).join('\n');
+
+export function PlanEditor({ plan, onChanged, canFinalize = true, className = '' }: { plan: Plan; onChanged: (plan: Plan) => void; canFinalize?: boolean; className?: string }) {
+  const { accessToken, setToken } = useSession(); const [markdown, setMarkdown] = useState(plan.markdown); const [references, setReferences] = useState(formatReferences(plan.references)); const [message, setMessage] = useState(''); const readonly = plan.status === 'FINALIZADO';
+  useEffect(() => { setMarkdown(plan.markdown); setReferences(formatReferences(plan.references)); setMessage(''); }, [plan]);
+  async function save() { if (!accessToken) return; try { const next = await plansApi.update(plan.id, { markdown, references: parseReferences(references) }, accessToken, setToken); onChanged(next); setMessage('Rascunho salvo.'); } catch { setMessage('Não foi possível salvar o rascunho.'); } }
+  async function finalize() { if (!accessToken || !confirm('Finalizar este plano? Ele não poderá mais ser editado.')) return; try { const next = await plansApi.finalize(plan.id, accessToken, setToken); onChanged(next); setMessage('Plano finalizado.'); } catch { setMessage('Não foi possível finalizar o plano.'); } }
+  return <Panel className={`plan-editor ${className}`.trim()}><div className="editor-heading"><div><span className="eyebrow">{plan.aiAssisted ? 'Assistido por IA' : ''}</span><h2>{readonly ? 'Plano finalizado' : 'Revisar rascunho'}</h2><div className="editor-skills">{plan.aiRun.skills.map(({ habilidade }) => <span key={habilidade.id}>{habilidade.codigo}</span>)}</div></div><span className="editor-status">{readonly ? 'Somente leitura' : 'Editor de rascunho'}</span></div>{message && <Notice tone={message.includes('Não foi') ? 'error' : 'success'}>{message}</Notice>}<div className="markdown-toolbar" aria-hidden="true"><strong>B</strong><em>I</em><span>☷</span><small>Markdown · pré-visualização sincronizada</small></div><label className="field">Markdown<textarea value={markdown} disabled={readonly} onChange={(event) => setMarkdown(event.target.value)} /></label><label className="field">Referências (título | URL HTTPS | citação)<textarea value={references} disabled={readonly} onChange={(event) => setReferences(event.target.value)} /></label>{!readonly && <div className="button-row"><span className="editor-help">Salvar não transfere propriedade nem altera autoria.</span><Button type="button" variant="secondary" onClick={() => void save()}>Salvar rascunho</Button>{canFinalize && <Button type="button" onClick={() => void finalize()}>Finalizar plano</Button>}</div>}</Panel>;
+}

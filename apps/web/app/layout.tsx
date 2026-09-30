@@ -1,6 +1,13 @@
 import './globals.css';
 import { AuthSessionProvider } from '../components/auth/auth-session-provider';
+import './styles.css';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <html lang="pt-BR"><body><AuthSessionProvider>{children}</AuthSessionProvider></body></html>;
+  return (
+    <html lang="pt-BR">
+      <body>
+        <AuthSessionProvider>{children}</AuthSessionProvider>
+      </body>
+    </html>
+  );
 }

@@ -14,7 +14,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.enableCors({ origin: webOrigin(), credentials: true });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }));
-  const document = SwaggerModule.createDocument(app, new DocumentBuilder().setTitle('Planejador BNCC API').setVersion('1.0').addBearerAuth().build());
+  const document = SwaggerModule.createDocument(app, new DocumentBuilder().setTitle('Planejador BNCC API').setVersion('1.0').addBearerAuth().addTag('Plans', 'Planos de aula assistidos por IA.').build());
   SwaggerModule.setup('api/docs', app, document);
   await app.listen(Number(process.env.PORT ?? 3001));
 }
